@@ -15,13 +15,17 @@ const {
 	BALENAELECTRONJS_SCREENSAVER_DELAY_OVERRIDE: screensaverDelayOverride,
 	BALENAELECTRONJS_SCREENSAVER_ON_COMMAND: screensaverOnCommand,
 	BALENAELECTRONJS_SCREENSAVER_OFF_COMMAND: screensaverOffCommand,
-	BALENAELECTRONJS_UPDATES_ONLY_DURING_SCREENSAVER: updatesOnlyDuringScreensaver,
+	BALENAELECTRONJS_UPDATES_ONLY_DURING_SCREENSAVER:
+		updatesOnlyDuringScreensaver,
+	NODE_ENV: nodeEnvironment,
 } = env;
 
 const createClient = promisify(x11.createClient);
 
 export async function screenOff(): Promise<void> {
-	await execFile('xset', 'dpms', 'force', 'off');
+	if (nodeEnvironment === 'production') {
+		await execFile('xset', 'dpms', 'force', 'off');
+	}
 }
 
 let screensaverDisabled = false;
@@ -34,11 +38,11 @@ async function setSleepDelay(value?: string): Promise<void> {
 		value ??
 		screensaverDelayOverride ??
 		(await Settings.getInstance().get('sleepDelay'));
-	if (value === 'never') {
+	if (value === 'never' && nodeEnvironment === 'production') {
 		await execFile('xset', 's', 'off', '-dpms');
 	} else {
 		const minutes = parseInt(value!, 10);
-		if (!isNaN(minutes)) {
+		if (!isNaN(minutes) && nodeEnvironment === 'production') {
 			const seconds = minutes * 60;
 			await execFile('xset', 'dpms', '0', '0', seconds.toString(10));
 		}

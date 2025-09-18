@@ -9,7 +9,7 @@ import {
 	Heading,
 	Provider as BaseProvider,
 } from 'rendition';
-import { default as styled } from 'styled-components';
+import styled from 'styled-components';
 
 const theme = {
 	font: 'SourceSansPro',
@@ -39,7 +39,8 @@ export const CloseableWindow: React.FunctionComponent<{
 	</OverlayWindow>
 );
 
-const WithMargins = styled(Flex)(() => ({
+// @ts-ignore
+const WithMargins = styled(Flex)({
 	marginTop: '50px',
 	marginLeft: '10px',
 	marginRight: '10px',
@@ -52,7 +53,7 @@ const WithMargins = styled(Flex)(() => ({
 	paddingBottom: '10px',
 	flexDirection: 'column' as const,
 	boxShadow: '0px 0px 7px 0px #666',
-}));
+});
 
 export const OverlayWindow: React.FunctionComponent<FlexProps> = (props) => (
 	<BaseProvider theme={theme}>

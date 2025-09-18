@@ -1,4 +1,4 @@
-import * as electron from 'electron';
+import * as electronRemote from '@electron/remote';
 import * as React from 'react';
 import { Form } from 'rendition';
 
@@ -10,7 +10,7 @@ interface SettingsState {
 }
 
 class SettingsWindow extends React.Component<{}, SettingsState> {
-	private settings = electron.remote.getGlobal('BALENAELECTRONJS_SETTINGS');
+	private settings = electronRemote.getGlobal('BALENAELECTRONJS_SETTINGS');
 
 	constructor(props: {}) {
 		super(props);

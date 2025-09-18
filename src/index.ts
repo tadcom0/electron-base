@@ -1,6 +1,6 @@
 import * as electron from 'electron';
 import { env } from 'process';
-
+import * as electronRemoteMain from '@electron/remote/main';
 import { listPartitionsOnce, mount } from './mounts';
 import {
 	focusScript,
@@ -10,6 +10,8 @@ import { init as openDialogInit } from './open-dialog';
 import { init as screenSaverInit } from './screensaver';
 import { Settings } from './settings/settings';
 import { Bounds, uiUrl } from './utils';
+
+electronRemoteMain.initialize();
 
 let initialized = false;
 
@@ -138,7 +140,8 @@ function init() {
 		const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
 		// delay required in order to have transparent windows
 		// https://github.com/electron/electron/issues/16809
-		const delay = env.BALENAELECTRONJS_OVERLAY_DELAY;
+		const overlayDelay = parseInt(env.BALENAELECTRONJS_OVERLAY_DELAY || '', 10);
+		const delay = Number.isInteger(overlayDelay) ? overlayDelay : undefined;
 		setTimeout(
 			() => {
 				const sleepPosition = getButtonPosition('sleep');

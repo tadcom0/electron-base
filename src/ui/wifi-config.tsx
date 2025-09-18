@@ -60,6 +60,7 @@ function passphraseRequired(ap: AccessPointProps) {
 	return ap.RsnFlags !== 0 || ap.WpaFlags !== 0;
 }
 
+// @ts-ignore
 const AccessPointBox = styled(Flex)(({ active }: { active: boolean }) => ({
 	backgroundColor: active ? '#f8f9fd' : undefined,
 	height: '40px',
@@ -138,9 +139,8 @@ class WifiDevice extends React.PureComponent<WifiDeviceProps, {}> {
 		const accessPoints = this.props.AccessPoints.map((ap: AccessPointProps) => {
 			const active = ap.path === this.props.ActiveAccessPoint;
 			const ssid = ap.Ssid.toString();
-			const configuredConnection = this.props.configuredWifiConnections.get(
-				ssid,
-			);
+			const configuredConnection =
+				this.props.configuredWifiConnections.get(ssid);
 			const configured = configuredConnection !== undefined;
 			const createConnection = configured
 				? undefined
@@ -281,9 +281,10 @@ class WifiConfig extends React.Component<{}, WifiConfigState> {
 					ac.Connection,
 				);
 				if (connection !== undefined) {
-					const ssid = connection.state.Settings[
-						'802-11-wireless'
-					]?.ssid?.value?.toString();
+					const ssid =
+						connection.state.Settings[
+							'802-11-wireless'
+						]?.ssid?.value?.toString();
 					connectionStates.set(ssid, ac.State);
 				}
 			}
