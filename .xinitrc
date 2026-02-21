@@ -12,7 +12,14 @@ if [ -n "$BALENAELECTRONJS_REMOTE_DEBUGGING_PORT" ]; then
 	simpleproxy -d -L $BALENAELECTRONJS_REMOTE_DEBUGGING_PORT -R 127.0.0.1:$LOCAL_PORT
 fi
 
+rm /tmp/.X0-lock &>/dev/null || true
+
+# Disable DPMS once X server is ready (screen blanking is handled by electron-base)
+(while [ ! -e /tmp/.X11-unix/X0 ]; do sleep 0.5; done
+  export DISPLAY=:0
+  xset -dpms
+) &
+
 metacity &
 dbus-daemon --fork --session --address $DBUS_SESSION_BUS_ADDRESS
-pulseaudio --start --exit-idle-time=-1
 /usr/src/app/node_modules/.bin/electron $REMOTE_DEBUG --no-sandbox --autoplay-policy=no-user-gesture-required -r /usr/lib/balena-electron-env /usr/src/app

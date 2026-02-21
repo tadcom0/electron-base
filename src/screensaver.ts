@@ -24,7 +24,7 @@ const createClient = promisify(x11.createClient);
 
 export async function screenOff(): Promise<void> {
 	if (nodeEnvironment === 'production') {
-		await execFile('xset', 'dpms', 'force', 'off');
+		await execFile('xset', 's', 'activate');
 	}
 }
 
@@ -44,7 +44,9 @@ async function setSleepDelay(value?: string): Promise<void> {
 		const minutes = parseInt(value!, 10);
 		if (!isNaN(minutes) && nodeEnvironment === 'production') {
 			const seconds = minutes * 60;
-			await execFile('xset', 'dpms', '0', '0', seconds.toString(10));
+			await execFile('xset', 's', seconds.toString(10));
+			await execFile('xset', 's', 'noblank');
+			await execFile('xset', '-dpms');
 		}
 	}
 }
