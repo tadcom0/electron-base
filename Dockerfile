@@ -30,6 +30,7 @@ RUN \
 	install_packages \
 	# Electron runtime dependencies
 	libasound2 \
+	alsa-ucm-conf \
 	libgdk-pixbuf-xlib-2.0-0 \
 	libglib2.0-0 \
 	libgtk-3-0 \

@@ -14,5 +14,5 @@ fi
 
 metacity &
 dbus-daemon --fork --session --address $DBUS_SESSION_BUS_ADDRESS
-pulseaudio --system --exit-idle-time=-1
+pulseaudio --start --exit-idle-time=-1
 /usr/src/app/node_modules/.bin/electron $REMOTE_DEBUG --no-sandbox --autoplay-policy=no-user-gesture-required -r /usr/lib/balena-electron-env /usr/src/app
