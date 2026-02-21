@@ -11,10 +11,10 @@ RUN npm run build
 
 CMD sleep infinity
 
-FROM balenalib/aarch64-ubuntu:noble-build AS runtime
+FROM balenalib/aarch64-debian-node:latest-build AS runtime
 ## With balenalib base images, USB works without any extra configuration
 
-RUN apt update && apt install -y npm git autoconf libtool pkg-config libx11-dev libxss-dev libxss1 curl
+RUN install_packages npm git autoconf libtool pkg-config libx11-dev libxss-dev libxss1 curl
 
 # Build clicklock
 WORKDIR /usr/src/clicklock
@@ -27,9 +27,9 @@ RUN make
 RUN cp /usr/src/clicklock/clicklock /usr/bin/clicklock
 
 RUN \
-	apt install -y \
+	install_packages \
 	# Electron runtime dependencies
-	libasound2t64 \
+	libasound2 \
 	libgdk-pixbuf-xlib-2.0-0 \
 	libglib2.0-0 \
 	libgtk-3-0 \
@@ -44,7 +44,6 @@ RUN \
 	# x11
 	xserver-xorg \
 	xinit \
-	# includes e
 	x11-xserver-utils \
 	x11-utils \
 	xauth \
@@ -58,11 +57,12 @@ RUN \
 	# mount ntfs partitions
 	ntfs-3g \
 	# for exposing --remote-debugging-port to other computers
-	linux-firmware-raspi \
 	simpleproxy \
+	# Audio output
+	pulseaudio \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN apt autoremove -y
+# RUN apt autoremove -y
 
 COPY --from=build /usr/src/app/build /usr/lib/balena-electron-env
 COPY .xserverrc /root/.xserverrc
