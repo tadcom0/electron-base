@@ -21,7 +21,11 @@ rm /tmp/.X0-lock &>/dev/null || true
 
 GPU_FLAGS="--disable-gpu"
 if [ "$ENABLE_GPU" = "1" ]; then
-	GPU_FLAGS="--disable-gpu-compositing"
+	GPU_FLAGS="--disable-gpu-compositing --ignore-gpu-blocklist --use-gl=angle --disable-gpu-sandbox"
+fi
+
+if [ "$FORCE_FULLHD_30" = "1" ]; then
+	xrandr --output HDMI-2 --mode 1920x1080 --rate 30
 fi
 
 metacity &
