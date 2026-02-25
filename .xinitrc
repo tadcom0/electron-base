@@ -7,8 +7,7 @@ fi
 REMOTE_DEBUG=""
 if [ -n "$BALENAELECTRONJS_REMOTE_DEBUGGING_PORT" ]; then
 	LOCAL_PORT=`expr $BALENAELECTRONJS_REMOTE_DEBUGGING_PORT - 1`
-	REMOTE_DEBUG="--remote-debugging-port=$LOCAL_PORT"
-	# --remote-debugging-port only listens on 127.0.0.1 so we set up a proxy listening on all interfaces
+	REMOTE_DEBUG="--remote-debugging-port=$LOCAL_PORT --remote-allow-origins=*"
 	simpleproxy -d -L $BALENAELECTRONJS_REMOTE_DEBUGGING_PORT -R 127.0.0.1:$LOCAL_PORT
 fi
 
@@ -20,6 +19,11 @@ rm /tmp/.X0-lock &>/dev/null || true
   xset -dpms
 ) &
 
+GPU_FLAGS="--disable-gpu"
+if [ "$ENABLE_GPU" = "1" ]; then
+	GPU_FLAGS="--disable-gpu-compositing"
+fi
+
 metacity &
 dbus-daemon --fork --session --address $DBUS_SESSION_BUS_ADDRESS
-/usr/src/app/node_modules/.bin/electron $REMOTE_DEBUG --no-sandbox --autoplay-policy=no-user-gesture-required -r /usr/lib/balena-electron-env /usr/src/app
+/usr/src/app/node_modules/.bin/electron $REMOTE_DEBUG --no-sandbox $GPU_FLAGS --autoplay-policy=no-user-gesture-required -r /usr/lib/balena-electron-env /usr/src/app
