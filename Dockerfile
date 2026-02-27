@@ -66,8 +66,6 @@ RUN \
 	ntfs-3g \
 	# for exposing --remote-debugging-port to other computers
 	simpleproxy \
-	# Audio output (client library only; server runs in separate audio container)
-	libpulse0 \
 	&& rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /usr/src/app/build /usr/lib/balena-electron-env
